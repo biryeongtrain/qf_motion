@@ -1,19 +1,15 @@
-package net.fabricmc.example;
+package net.biryeongtrain06.motion_adder;
 
 import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import net.biryeongtrain06.motion_adder.commands.MotionAdder;
+import net.biryeongtrain06.motion_adder.commands.vec3dSidebar;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.example.commands.MotionAdder;
-import net.fabricmc.example.commands.vec3dSidebar;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import net.fabricmc.example.commands.MotionAdder;
-
-import java.util.Collection;
 
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -52,9 +48,12 @@ public class Qf_motion_test implements ModInitializer {
 
 			dispatcher.register(
 					literal("dash").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-							.executes(MotionAdder::pushCommand)
+							.then(CommandManager.argument("entity", EntityArgumentType.entity())
+								.then(CommandManager.argument("type", StringArgumentType.string())
+										.then(CommandManager.argument("power", FloatArgumentType.floatArg())
+											.executes(ctx -> MotionAdder.push(EntityArgumentType.getEntity(ctx, "entity"), StringArgumentType.getString(ctx, "type"), FloatArgumentType.getFloat(ctx, "power"))))))
 			);
 		})));
-		LOGGER.info("Hello Fabric world!");
+		LOGGER.info("qf Motion Adder is Completed Loaded!");
 	}
 }

@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.Qf_motion_test"
+      "net.biryeongtrain06.motion_adder.Qf_motion_test"
     ]
   },
 

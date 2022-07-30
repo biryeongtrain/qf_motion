@@ -1,4 +1,4 @@
-package net.fabricmc.example.commands;
+package net.biryeongtrain06.motion_adder.commands;
 
 
 import com.mojang.brigadier.context.CommandContext;
