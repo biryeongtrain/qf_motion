@@ -3,6 +3,7 @@ package net.fabricmc.example;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.example.commands.MotionAdder;
+import net.fabricmc.example.commands.vec3dSidebar;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
@@ -10,6 +11,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import net.fabricmc.example.commands.MotionAdder;
 
 import java.util.Collection;
 
@@ -28,18 +30,29 @@ public class Qf_motion_test implements ModInitializer {
 		// Proceed with mild caution.
 		CommandRegistrationCallback.EVENT.register((((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(
-					literal("test").requires(cs -> cs.hasPermissionLevel(2))
+					literal("addmotion").requires(cs -> cs.hasPermissionLevel(2))
 							.then(CommandManager.argument("entity", EntityArgumentType.entity())
 									.then(CommandManager.argument("x", FloatArgumentType.floatArg())
 											.then(CommandManager.argument("y", FloatArgumentType.floatArg())
 													.then(CommandManager.argument("z", FloatArgumentType.floatArg())
-															.executes(ctx -> {
-																return MotionAdder::AddMotion(EntityArgumentType.getEntity(ctx, "entity"), FloatArgumentType.getFloat(ctx, "x"))
-																	})
+															.executes(ctx -> MotionAdder.AddMotion(EntityArgumentType.getEntity(ctx, "entity"), FloatArgumentType.getFloat(ctx, "x"), FloatArgumentType.getFloat(ctx, "y"), FloatArgumentType.getFloat(ctx, "z")))
 													)
 											)
 									)
 							)
+			);
+			dispatcher.register(
+					literal("Open_Gui").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+							.executes(vec3dSidebar::openGUI)
+			);
+			dispatcher.register(
+					literal("Close_Gui").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+							.executes(vec3dSidebar::closeGUI)
+			);
+
+			dispatcher.register(
+					literal("dash").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+							.executes(MotionAdder::pushCommand)
 			);
 		})));
 		LOGGER.info("Hello Fabric world!");
