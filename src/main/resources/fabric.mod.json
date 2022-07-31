@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Qf Motion Test Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "very SIMPLE mod that provides server-side velocity modify command.",
   "authors": [
     "Me!"
   ],
@@ -14,7 +14,7 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/qf_motion_test/icon.png",
 
   "environment": "*",
   "entrypoints": {
