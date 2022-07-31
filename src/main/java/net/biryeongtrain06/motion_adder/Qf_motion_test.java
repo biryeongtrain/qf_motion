@@ -51,7 +51,8 @@ public class Qf_motion_test implements ModInitializer {
 							.then(CommandManager.argument("entity", EntityArgumentType.entity())
 								.then(CommandManager.argument("type", StringArgumentType.string())
 										.then(CommandManager.argument("power", FloatArgumentType.floatArg())
-											.executes(ctx -> MotionAdder.push(EntityArgumentType.getEntity(ctx, "entity"), StringArgumentType.getString(ctx, "type"), FloatArgumentType.getFloat(ctx, "power"))))))
+												.then(CommandManager.argument("yheight", FloatArgumentType.floatArg())
+											.executes(ctx -> MotionAdder.push(EntityArgumentType.getEntity(ctx, "entity"), StringArgumentType.getString(ctx, "type"), FloatArgumentType.getFloat(ctx, "power"), FloatArgumentType.getFloat(ctx, "yheight")))))))
 			);
 		})));
 		LOGGER.info("qf Motion Adder is Completed Loaded!");

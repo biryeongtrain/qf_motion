@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -28,10 +29,10 @@ public class MotionAdder {
 
         return 0;
     }
-    public static int push (Entity entity, String type, float power) {
+    public static int push (Entity entity, String type, float power, float yVelocity) {
         try {
             // TODO : Forward Dash = entity.getRotationVector()
-            Vec3d vec3d = getVec3d(entity, getDashValue(type), power);
+            Vec3d vec3d = getVec3d(entity, getDashValue(type), power, yVelocity);
 
             entity.setVelocity(entity.getVelocity().add(vec3d));
             entity.velocityModified = true;
@@ -60,18 +61,15 @@ public class MotionAdder {
         return -1;
     }
 
-    private static Vec3d getVec3d (Entity entity, int value, float power) throws CommandSyntaxException {
+    private static Vec3d getVec3d (Entity entity, int value, float power, float yVelocity) throws CommandSyntaxException {
 
-        double x = entity.getRotationVector().getX();
-        double z = entity.getRotationVector().getZ();
-        float y = power;
+        Vec3d testVec3d = entity.getRotationVector().multiply(power, 0.15, power).normalize();
 
         if (value == -1) throw new CommandSyntaxException(new SimpleCommandExceptionType(Text.literal("can't find this type")), Text.literal("test"));
-        if (value == 0) return new Vec3d(x, y, z);
-        if (value == 1) return new Vec3d(-x, y ,-z);
-        if (value == 2) return new Vec3d(x - 0.5, y ,0.5 + z);
-        if (value == 3) return new Vec3d(0.5 + x , y, 0.5 - z);
-
+        if (value == 0) return new Vec3d(testVec3d.x, yVelocity, testVec3d.z);
+        if (value == 1) return new Vec3d(-testVec3d.x, yVelocity, -testVec3d.z);
+        if (value == 2) return new Vec3d(testVec3d.z, yVelocity, -testVec3d.x);
+        if (value == 3) return new Vec3d(-testVec3d.z, yVelocity, testVec3d.x);
         return new Vec3d(0 , power, 0);
     }
 }
